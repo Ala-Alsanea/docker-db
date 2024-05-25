@@ -1,0 +1,27 @@
+sudo docker pull mcr.microsoft.com/mssql/server:2019-latest
+
+
+
+#run
+sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Passw0rd"  -p 1433:1433 --name sql1 --hostname sql1 -d  mcr.microsoft.com/mssql/server:2019-latest
+
+
+
+#Connect to SQL Server
+sudo docker exec -it sql1 "bash"
+
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Passw0rd"
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA
+
+
+# The server is ready for connections once the SQL Server error logs display the message: SQL Server is now ready for client connections. This is an informational message; no user action is required. You can review the SQL Server error log inside the container using the command:
+
+docker exec -t sql1 cat /var/opt/mssql/log/errorlog | grep connection
+
+#Change the system administrator password
+sudo docker exec -it sql1 /opt/mssql-tools/bin/sqlcmd \
+-S localhost -U SA \
+ -P "$(read -sp "Enter current SA password: "; echo "${REPLY}")" \
+ -Q "ALTER LOGIN SA WITH PASSWORD=\"$(read -sp "Enter new SA password: "; echo "${REPLY}")\""
+
+
