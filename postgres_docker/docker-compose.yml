@@ -1,0 +1,14 @@
+version: "3.2"
+
+services:
+  postgres_db:
+    image: "postgres:16.2"
+    container_name: postgres_db
+    user: root
+    hostname: "postgres_db"
+    environment:
+      POSTGRES_USER: "ala"
+      POSTGRES_PASSWORD: "1234@Pass"
+    ports:
+      - "5432:5432"
+    restart: on-failure
